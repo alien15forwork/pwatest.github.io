@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>添加到主屏幕功能示例</title>
+</head>
+<body>
+    <script>
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+            // 设备已经将网站添加到主屏幕上
+        } else {
+            // 可以将网站添加到主屏幕上
+            var prompt = document.createElement('div');
+            prompt.innerHTML = '将网站添加到主屏幕上';
+            document.body.appendChild(prompt);
+
+            prompt.addEventListener('click', function() {
+                if ('serviceWorker' in navigator && 'PushManager' in window) {
+                    navigator.serviceWorker.register('sw.js').then(function() {
+                        navigator.serviceWorker.ready.then(function(registration) {
+                            registration.pushManager.subscribe({ userVisibleOnly: true }).then(function() {
+                                var icon = 'icon.png';
+                                registration.showNotification('网站名称', { body: '网站描述', icon: icon });
+                            });
+                        });
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>
